@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 960" width="1120" height="960" role="img" aria-label="Sequência completa de uma pergunta: enquanto o operador digita, cada tecla consulta o endpoint de sugestões e devolve um dropdown de perguntas certificadas. Ao enviar, a pergunta passa por normalização, gazetteer de entidades, roteamento por regex, com fallback em camadas de fuzzy e semântica, despacho para SQL parametrizada ou consulta ao vivo, filtros, formatação determinística, reescrita opcional por LLM e desenho da tabela interativa.">
+  <defs>
+    <marker id="sN" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a8f98"/>
+    </marker>
+    <marker id="sA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3fa9ff"/>
+    </marker>
+    <marker id="sM" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7079"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1120" height="960" fill="#0d0d0d"/>
+
+  <g font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+    <text x="40" y="36" font-size="17" font-weight="600" fill="#e6e6e6">Da digitação à resposta</text>
+    <text x="40" y="57" font-size="12.5" fill="#6b7079">o caminho completo de uma pergunta, ponta a ponta</text>
+
+    <!-- ================= FAIXA 1: ENQUANTO DIGITA ================= -->
+    <rect x="40" y="80" width="1040" height="136" rx="8" fill="#111316" stroke="#23262b"/>
+    <text x="60" y="104" font-size="11" font-weight="600" fill="#6b7079" letter-spacing="1">ENQUANTO O OPERADOR DIGITA</text>
+
+    <rect x="60" y="118" width="240" height="46" rx="6" fill="#16181c" stroke="#2c2f36"/>
+    <text x="180" y="146" text-anchor="middle" font-size="12.5" fill="#e6e6e6">navegador</text>
+
+    <line x1="300" y1="141" x2="374" y2="141" stroke="#8a8f98" stroke-width="1.5" marker-end="url(#sN)"/>
+    <text x="337" y="133" text-anchor="middle" font-size="10.5" fill="#8a8f98">a cada tecla</text>
+
+    <rect x="380" y="118" width="280" height="46" rx="6" fill="#16181c" stroke="#2c2f36"/>
+    <text x="520" y="140" text-anchor="middle" font-size="12.5" fill="#e6e6e6">GET /consulta/sugestoes</text>
+    <text x="520" y="156" text-anchor="middle" font-size="10.5" fill="#7d8894">fora do teto de concorrência</text>
+
+    <line x1="660" y1="141" x2="734" y2="141" stroke="#8a8f98" stroke-width="1.5" marker-end="url(#sN)"/>
+
+    <rect x="740" y="118" width="280" height="46" rx="6" fill="#16181c" stroke="#2c2f36"/>
+    <text x="880" y="146" text-anchor="middle" font-size="12.5" fill="#e6e6e6">405 perguntas certificadas</text>
+
+    <polyline points="880,164 880,188 180,188 180,170" fill="none" stroke="#6b7079" stroke-width="1.5" marker-end="url(#sM)"/>
+    <text x="530" y="202" text-anchor="middle" font-size="10.5" fill="#8a8f98">dropdown de sugestões — só perguntas que já passaram por teste real</text>
+
+    <!-- ================= FAIXA 2: AO ENVIAR ================= -->
+    <text x="60" y="256" font-size="11" font-weight="600" fill="#6b7079" letter-spacing="1">AO ENVIAR</text>
+
+    <!-- S1 normalizacao -->
+    <rect x="220" y="268" width="400" height="52" rx="6" fill="#16181c" stroke="#2c2f36"/>
+    <text x="420" y="290" text-anchor="middle" font-size="12.5" font-weight="600" fill="#e6e6e6">normalização</text>
+    <text x="420" y="308" text-anchor="middle" font-size="11" fill="#8a8f98">acentos, caixa, 53 grupos de sinônimos</text>
+
+    <line x1="420" y1="320" x2="420" y2="334" stroke="#3fa9ff" stroke-width="1.5" marker-end="url(#sA)"/>
+
+    <!-- S2 gazetteer -->
+    <rect x="220" y="338" width="400" height="52" rx="6" fill="#16181c" stroke="#2c2f36"/>
+    <text x="420" y="360" text-anchor="middle" font-size="12.5" font-weight="600" fill="#e6e6e6">camada 0.5 · gazetteer de entidades</text>
+    <text x="420" y="378" text-anchor="middle" font-size="11" fill="#8a8f98">nome de canal vira marcador, antes de qualquer regex</text>
+
+    <line x1="420" y1="390" x2="420" y2="404" stroke="#3fa9ff" stroke-width="1.5" marker-end="url(#sA)"/>
+
+    <!-- S3 regex -->
+    <rect x="220" y="408" width="400" height="52" rx="6" fill="#101822" stroke="#007acc" stroke-width="1.5"/>
+    <text x="420" y="430" text-anchor="middle" font-size="12.5" font-weight="600" fill="#3fa9ff">camada 0 · roteamento por regex</text>
+    <text x="420" y="448" text-anchor="middle" font-size="11" fill="#c9ced6">67 intenções, testadas por ordem de prioridade</text>
+
+    <!-- ramo: nao casou -->
+    <line x1="620" y1="434" x2="714" y2="434" stroke="#8a8f98" stroke-width="1.5" marker-end="url(#sN)"/>
+    <text x="667" y="426" text-anchor="middle" font-size="10.5" fill="#8a8f98">não casou</text>
+
+    <rect x="720" y="408" width="340" height="132" rx="6" fill="#131417" stroke="#33363d"/>
+    <text x="740" y="430" font-size="12" font-weight="600" fill="#c9ced6">fallback em camadas</text>
+    <text x="740" y="456" font-size="11" fill="#8a8f98">camada 2 · fuzzy da frase inteira</text>
+    <text x="740" y="478" font-size="11" fill="#8a8f98">camada 3 · semântica (embeddings, offline)</text>
+    <text x="740" y="500" font-size="11" fill="#8a8f98">camada 4 · “você quis dizer…”</text>
+    <text x="740" y="524" font-size="10.5" fill="#6b7079">nenhuma casou → devolve opções, nunca um chute</text>
+
+    <!-- retorno do fallback -->
+    <polyline points="890,540 890,560 470,560 470,576" fill="none" stroke="#6b7079" stroke-width="1.5" marker-end="url(#sM)"/>
+    <text x="700" y="554" text-anchor="middle" font-size="10.5" fill="#8a8f98">intenção recuperada</text>
+
+    <!-- caminho direto -->
+    <polyline points="420,460 420,560 370,560 370,576" fill="none" stroke="#3fa9ff" stroke-width="1.5" marker-end="url(#sA)"/>
+    <text x="392" y="512" font-size="10.5" fill="#3fa9ff">casou</text>
+
+    <!-- S4 despacho -->
+    <rect x="220" y="580" width="400" height="60" rx="6" fill="#16181c" stroke="#2c2f36"/>
+    <text x="420" y="602" text-anchor="middle" font-size="12.5" font-weight="600" fill="#e6e6e6">despacho da operação</text>
+    <text x="420" y="620" text-anchor="middle" font-size="11" fill="#8a8f98">SQL parametrizada sobre o inventário (SQLite)</text>
+    <text x="420" y="635" text-anchor="middle" font-size="10.5" fill="#6b7079">nenhum SQL é escrito pelo modelo</text>
+
+    <line x1="620" y1="610" x2="714" y2="610" stroke="#8a8f98" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#sN)"/>
+    <rect x="720" y="586" width="340" height="48" rx="6" fill="#131417" stroke="#33363d" stroke-dasharray="4 3"/>
+    <text x="740" y="606" font-size="11" fill="#8a8f98">5 intenções consultam o equipamento</text>
+    <text x="740" y="623" font-size="11" fill="#8a8f98">ao vivo, no momento da pergunta</text>
+
+    <line x1="420" y1="640" x2="420" y2="656" stroke="#3fa9ff" stroke-width="1.5" marker-end="url(#sA)"/>
+
+    <!-- S5 filtros -->
+    <rect x="220" y="660" width="400" height="48" rx="6" fill="#16181c" stroke="#2c2f36"/>
+    <text x="420" y="682" text-anchor="middle" font-size="12.5" font-weight="600" fill="#e6e6e6">filtros pós-consulta</text>
+    <text x="420" y="699" text-anchor="middle" font-size="11" fill="#8a8f98">ponto de rede, tipo HD/SD, direção</text>
+
+    <line x1="420" y1="708" x2="420" y2="724" stroke="#3fa9ff" stroke-width="1.5" marker-end="url(#sA)"/>
+
+    <!-- S6 formatacao -->
+    <rect x="220" y="728" width="400" height="60" rx="6" fill="#101822" stroke="#007acc" stroke-width="1.5"/>
+    <text x="420" y="750" text-anchor="middle" font-size="12.5" font-weight="600" fill="#3fa9ff">formatação + resumo determinístico</text>
+    <text x="420" y="768" text-anchor="middle" font-size="11" fill="#c9ced6">tabela e frase de abertura, sem LLM</text>
+    <text x="420" y="783" text-anchor="middle" font-size="10.5" fill="#7d8894">0,03–0,18 ms · é o mesmo texto que a voz lê</text>
+
+    <line x1="420" y1="788" x2="420" y2="804" stroke="#6b7079" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#sM)"/>
+
+    <!-- S7 LLM opcional -->
+    <rect x="220" y="806" width="400" height="48" rx="6" fill="#131417" stroke="#33363d" stroke-dasharray="4 4"/>
+    <text x="420" y="828" text-anchor="middle" font-size="12" fill="#8a8f98">LLM local reescreve como frase — opcional</text>
+    <text x="420" y="845" text-anchor="middle" font-size="10.5" fill="#6b7079">desligar remove o floreio, não o dado</text>
+
+    <line x1="420" y1="854" x2="420" y2="870" stroke="#3fa9ff" stroke-width="1.5" marker-end="url(#sA)"/>
+
+    <!-- S8 tabela -->
+    <rect x="220" y="874" width="400" height="52" rx="6" fill="#16181c" stroke="#2c2f36"/>
+    <text x="420" y="896" text-anchor="middle" font-size="12.5" font-weight="600" fill="#e6e6e6">tabela interativa no navegador</text>
+    <text x="420" y="914" text-anchor="middle" font-size="11" fill="#8a8f98">ordenar, filtrar, marcar coluna, copiar para planilha</text>
+
+    <!-- anotacao de latencia -->
+    <line x1="200" y1="268" x2="200" y2="788" stroke="#2c2f36" stroke-width="1"/>
+    <line x1="200" y1="268" x2="212" y2="268" stroke="#2c2f36" stroke-width="1"/>
+    <line x1="200" y1="788" x2="212" y2="788" stroke="#2c2f36" stroke-width="1"/>
+    <text x="192" y="520" text-anchor="end" font-size="11" fill="#7d8894">70–220 ms</text>
+    <text x="192" y="536" text-anchor="end" font-size="10.5" fill="#6b7079">tudo isto</text>
+  </g>
+</svg>

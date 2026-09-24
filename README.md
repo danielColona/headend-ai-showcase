@@ -70,6 +70,71 @@ síntese de voz lê.
 
 ---
 
+## Da digitação à resposta
+
+![Sequência completa de uma pergunta](docs/fluxo.svg)
+
+Dois detalhes que costumam passar batido nesse caminho:
+
+**O autocomplete não é sugestão genérica.** O dropdown só oferece perguntas que já
+passaram por teste real e tiveram a intenção registrada. O operador não descobre o
+que o sistema entende por tentativa e erro — ele escolhe de um cardápio garantido.
+
+**O endpoint de sugestões fica fora do teto de concorrência de propósito.** É uma
+chamada por tecla digitada; submetê-lo ao mesmo limite das consultas pesadas
+transformaria o autocomplete em fila.
+
+---
+
+## Infraestrutura: seis containers
+
+| Container | Papel | Memória |
+|---|---|---|
+| `open-webui` | interface de chat — fork próprio, buildado em CI | 3 GB |
+| `headend-ai-api` | FastAPI: o motor de consulta | 1,5 GB |
+| `headend-ai-mcp` | servidor MCP — **mesma imagem** do container da API | 1,5 GB |
+| `headend-ai-mcpo` | ponte MCP → OpenAPI | 512 MB |
+| `ollama` | LLM local, CPU-only | 3 GB |
+| `portainer` | administração dos containers | — |
+
+Duas decisões visíveis nessa tabela:
+
+**API e servidor MCP compartilham uma única imagem.** São dois papéis do mesmo
+motor, não dois produtos. Um build, dois containers — e nenhuma chance de as duas
+superfícies divergirem de comportamento por terem sido construídas em momentos
+diferentes.
+
+**Todo container tem limite de memória, e `mem_limit` igual a `memswap_limit`**
+(ou seja, sem swap). Isso não estava lá desde o começo: nasceu do incidente em que
+a memória do host acabou e um único processo levou junto a interface e o modelo.
+Sem limite, o container que vaza escolhe quem morre.
+
+---
+
+## O banco
+
+Um único SQLite de **10,4 MB**: 23 tabelas, 35 índices.
+
+| Família | Tabelas | Conteúdo |
+|---|---|---|
+| **Inventário varrido** | `servico`, `transport_stream`, `pid`, `porta_funcao` | o que existe no headend |
+| **Correlação** | `correlacao_*`, `origem_real_servico` | o cruzamento entre subsistemas |
+| **Monitoramento** | `zabbix_host`, `zabbix_item`, e tabelas por classe de equipamento | ~26.000 itens coletados |
+| **Operação** | `perguntas_certificadas` | o gabarito que vira regressão |
+
+**Por que SQLite e não Postgres:** a carga é quase toda leitura, num único host, com
+o inventário renovado por varredura mensal. O banco inteiro cabe folgado em memória.
+Um servidor de banco aqui seria um processo a mais para monitorar, limitar e
+reiniciar — custo operacional sem contrapartida.
+
+**O padrão que exigiu cuidado:** cada varredura grava com um `coleta_id` próprio e
+só apaga a anterior no final. Uma varredura interrompida no meio deixa o banco
+**duplicado, em silêncio** — sem erro, sem alarme, com toda resposta de canal
+aparecendo duas vezes. A proteção é o procedimento restaurar o backup em qualquer
+falha: banco antigo e coerente vale mais que banco novo e duplicado.
+
+---
+
 ## Tolerância à fala real do operador
 
 Operador não digita como o equipamento nomeia. Ele escreve *"sportv hd"*, e o
@@ -92,6 +157,31 @@ nome de canal; nome resolvido não pode ser muito menor que a janela que casou;
 janela feita só de vocabulário técnico de stream não vira canal. Cada uma nasceu de
 um caso real, e todas são regras gerais verificadas contra o banco inteiro — não
 remendos caso a caso.
+
+### O que quebra num roteador por regex em português
+
+Cada item abaixo custou um bug real em produção. São o tipo de coisa que não
+aparece em tutorial de NLU porque só surge quando operador de verdade digita:
+
+| Armadilha | Por quê |
+|---|---|
+| `canais?` não casa "canal" | `?` não pluraliza palavra irregular — precisa de alternância explícita |
+| Sinônimo no singular não cobre o plural | "saída→output" não resolve "saídas"; exige entrada própria |
+| Sigla de 2–3 letras sem `\b` | casa como substring dentro de outra palavra, roteia certo e **filtra errado** — sem erro visível |
+| Padrão genérico antes do específico | o primeiro que casa vence; um padrão amplo rouba a versão por-entidade |
+| Lookahead negativo sem âncora | `re.search` tenta outras posições e a exclusão deixa de valer |
+| Pergunta negativa | "quais **não** têm legenda" precisa de intenção própria — senão o "não" é ignorado e a resposta vem invertida |
+
+A última é a mais instrutiva: sem intenção dedicada, a pergunta negativa não dava
+erro — devolvia com confiança exatamente o conjunto oposto ao perguntado. E a
+negação precisa de `NOT EXISTS`, não de `LEFT JOIN ... IS NULL`, porque a entidade
+tem vários filhos e o join a repetiria uma vez por filho que não casa.
+
+**A regra que organiza tudo isso:** nenhuma intenção nova entra sem checar colisão
+de prioridade contra os padrões catch-all, e sem que a frase-alvo real seja testada
+de ponta a ponta. Roteamento capturar os parâmetros certos **não** garante que a
+operação os use — o rastro de depuração prova que a regex funcionou, não que a
+consulta leu o que foi capturado.
 
 ---
 
