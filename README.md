@@ -11,6 +11,14 @@ sem depender de nenhum serviço externo.
 > operacionais são privados: o sistema consulta a infraestrutura real de um
 > operador de TV por assinatura.
 
+![Interface do HeadendAI](docs/interface.png)
+
+<sub>Interface real do produto. **Todos os dados exibidos são fictícios** — nomes de
+canal, endereços multicast e identificadores foram inventados para esta
+documentação. A tabela é interativa: ordena por coluna (taxa compara como número,
+multicast compara octeto a octeto), filtra geral e por coluna, e copia seleção
+para planilha.</sub>
+
 ---
 
 ## Em números
@@ -50,23 +58,7 @@ resposta plausível e errada é pior que nenhuma resposta.
 
 A arquitetura inverte a responsabilidade:
 
-```
-pergunta do operador
-      │
-      ▼
-┌─────────────────────────────────────────────┐
-│  MOTOR DETERMINÍSTICO                       │
-│                                             │
-│  normalização → sinônimos                   │
-│  camada 0.5   → gazetteer de entidades      │
-│  roteamento   → regex por intenção          │
-│  despacho     → SQL parametrizada           │
-│  formatação   → tabela + resumo             │
-└─────────────────────────────────────────────┘
-      │
-      ▼  (opcional, desligável)
-   LLM local — só reescreve a resposta pronta
-```
+![Arquitetura: LLM fora do caminho de decisão](docs/arquitetura.svg)
 
 **O LLM nunca escolhe a consulta, nunca monta SQL, nunca toca no dado.** Ele recebe
 um resultado já correto e, se ligado, o reescreve como frase natural. Desligá-lo

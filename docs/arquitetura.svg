@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 500" width="1080" height="500" role="img" aria-label="Comparação: na abordagem convencional o LLM decide qual consulta rodar e pode inventar parâmetros; no HeadendAI um motor determinístico decide e consulta, e o LLM apenas reescreve a resposta já pronta, podendo ser desligado.">
+  <defs>
+    <marker id="setaN" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a8f98"/>
+    </marker>
+    <marker id="setaA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3fa9ff"/>
+    </marker>
+    <marker id="setaW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#d98f45"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1080" height="500" fill="#0d0d0d"/>
+
+  <g font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+
+    <!-- ================= COLUNA ESQUERDA: convencional ================= -->
+    <text x="270" y="38" text-anchor="middle" font-size="15" font-weight="600" fill="#8a8f98">Abordagem convencional</text>
+    <text x="270" y="58" text-anchor="middle" font-size="12" fill="#6b7079">testada e descartada</text>
+
+    <rect x="140" y="80" width="260" height="42" rx="6" fill="#16181c" stroke="#2c2f36"/>
+    <text x="270" y="106" text-anchor="middle" font-size="13" fill="#e6e6e6">pergunta do operador</text>
+
+    <line x1="270" y1="122" x2="270" y2="158" stroke="#8a8f98" stroke-width="1.5" marker-end="url(#setaN)"/>
+
+    <rect x="140" y="160" width="260" height="66" rx="6" fill="#241c12" stroke="#d98f45" stroke-width="1.5"/>
+    <text x="270" y="186" text-anchor="middle" font-size="13" font-weight="600" fill="#e8b174">LLM decide</text>
+    <text x="270" y="206" text-anchor="middle" font-size="12" fill="#b99165">qual consulta rodar</text>
+
+    <line x1="270" y1="226" x2="270" y2="272" stroke="#d98f45" stroke-width="1.5" marker-end="url(#setaW)"/>
+    <text x="282" y="253" font-size="11" fill="#b99165">escolhe ferramenta e parâmetros</text>
+
+    <rect x="140" y="274" width="260" height="42" rx="6" fill="#16181c" stroke="#2c2f36"/>
+    <text x="270" y="300" text-anchor="middle" font-size="13" fill="#e6e6e6">consulta ao banco</text>
+
+    <line x1="270" y1="316" x2="270" y2="352" stroke="#8a8f98" stroke-width="1.5" marker-end="url(#setaN)"/>
+
+    <rect x="140" y="354" width="260" height="42" rx="6" fill="#16181c" stroke="#2c2f36"/>
+    <text x="270" y="380" text-anchor="middle" font-size="13" fill="#e6e6e6">resposta</text>
+
+    <rect x="140" y="418" width="260" height="56" rx="6" fill="#1a1410" stroke="#5c4226"/>
+    <text x="270" y="440" text-anchor="middle" font-size="11.5" fill="#d98f45">modelo local de 1,7 B, CPU-only:</text>
+    <text x="270" y="458" text-anchor="middle" font-size="11.5" fill="#d98f45">inventa parâmetro, sem sinal de erro</text>
+
+    <!-- ================= DIVISOR ================= -->
+    <line x1="540" y1="70" x2="540" y2="480" stroke="#26282d" stroke-width="1" stroke-dasharray="3 5"/>
+
+    <!-- ================= COLUNA DIREITA: HeadendAI ================= -->
+    <text x="810" y="38" text-anchor="middle" font-size="15" font-weight="600" fill="#e6e6e6">HeadendAI</text>
+    <text x="810" y="58" text-anchor="middle" font-size="12" fill="#6b7079">em produção</text>
+
+    <rect x="680" y="80" width="260" height="42" rx="6" fill="#16181c" stroke="#2c2f36"/>
+    <text x="810" y="106" text-anchor="middle" font-size="13" fill="#e6e6e6">pergunta do operador</text>
+
+    <line x1="810" y1="122" x2="810" y2="158" stroke="#3fa9ff" stroke-width="1.5" marker-end="url(#setaA)"/>
+
+    <rect x="656" y="160" width="308" height="156" rx="6" fill="#101822" stroke="#007acc" stroke-width="1.5"/>
+    <text x="810" y="184" text-anchor="middle" font-size="13" font-weight="600" fill="#3fa9ff">motor determinístico</text>
+    <line x1="676" y1="196" x2="944" y2="196" stroke="#1d3a52"/>
+    <text x="676" y="217" font-size="11.5" fill="#c9ced6">normalização · 53 grupos de sinônimos</text>
+    <text x="676" y="239" font-size="11.5" fill="#c9ced6">gazetteer de entidades (camada 0.5)</text>
+    <text x="676" y="261" font-size="11.5" fill="#c9ced6">roteamento por regex · 67 intenções</text>
+    <text x="676" y="283" font-size="11.5" fill="#c9ced6">SQL parametrizada · formatação</text>
+    <text x="676" y="305" font-size="11.5" fill="#7d8894">fuzzy e embeddings como fallback</text>
+
+    <line x1="810" y1="316" x2="810" y2="352" stroke="#3fa9ff" stroke-width="1.5" marker-end="url(#setaA)"/>
+    <text x="822" y="339" font-size="11" fill="#3fa9ff">resultado já correto</text>
+
+    <rect x="680" y="354" width="260" height="42" rx="6" fill="#16181c" stroke="#2c2f36"/>
+    <text x="810" y="380" text-anchor="middle" font-size="13" fill="#e6e6e6">resposta + resumo (0,03–0,18 ms)</text>
+
+    <line x1="810" y1="396" x2="810" y2="416" stroke="#6b7079" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#setaN)"/>
+
+    <rect x="680" y="418" width="260" height="56" rx="6" fill="#131417" stroke="#33363d" stroke-dasharray="4 4"/>
+    <text x="810" y="440" text-anchor="middle" font-size="11.5" fill="#8a8f98">LLM local reescreve como frase</text>
+    <text x="810" y="458" text-anchor="middle" font-size="11.5" fill="#8a8f98">opcional — desligar não degrada o dado</text>
+
+  </g>
+</svg>
